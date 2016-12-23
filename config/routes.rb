@@ -3,6 +3,6 @@ Rails.application.routes.draw do
 	root to: 'index#index'
 	
 	get 'index/index'
-	get 'index/more_info'
-	get 'index/about_us'
+	get 'more_info', to: 'index#more_info'
+	get 'about_us', to: 'index#about_us'
 end
