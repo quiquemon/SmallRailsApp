@@ -10,6 +10,10 @@
  * files in this directory. Styles in this file should be added after the last require_* statement.
  * It is generally better to create a new file per style scope.
  *
+ * To add glyphicons: http://stackoverflow.com/questions/21962775/bootstrap-3rails-4-certain-glyphicons-not-working
+ *
+ *=require bootstrap.min.css
+ *=require bootstrap-theme.min.css
  *= require_tree .
  *= require_self
  */
