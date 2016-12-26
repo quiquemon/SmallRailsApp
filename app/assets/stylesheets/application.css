@@ -17,3 +17,13 @@
  *= require_tree .
  *= require_self
  */
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+	width: 100%;
+	margin: auto;
+}
+
+nav {
+	padding: 5px;
+}
