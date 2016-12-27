@@ -12,4 +12,55 @@
 //
 //=require jquery-3.1.1.min.js
 //=require bootstrap.min.js
+//=require bootstrap-dialog.min.js
+//=require bootstrap-datepicker.min.js
 //=require_tree .
+
+function cancelButton() {
+	$(".btnCancel").click(function() {
+		$(".close").click();
+	});
+}
+
+function signUp(){
+	$("#btnSignUp").click(function() {
+		var button = $(this);
+		
+		button.prop("disabled", true);
+		$.post("/sign_up", {
+			name: $("#name").val(),
+			lastname: $("#lastname").val(),
+			birthday: $("#birthday").val(),
+			email: $("#email").val(),
+			password: $("#password").val(),
+			newsletter: $("#newsletter").val()
+		}, function(response) {
+			button.prop("disabled", false);
+			BootstrapDialog.show({
+				title: "Sign Up response",
+				message: "<pre>" + JSON.stringify(response, null, 4) + "</pre>"
+			});
+		});
+	});
+}
+
+function login() {
+	$("#btnLogin").click(function() {
+		
+	});
+}
+
+$(document).ready(function() {
+	// Opciones del DatePicker
+	$(".datetimepicker").datepicker({
+		format: "yyyy-mm-dd",
+		todayHighlight: true,
+		autoclose: true,
+		startDate: "1900-01-01",
+		endDate: new Date()
+	});
+	
+	cancelButton();
+	signUp();
+	login();
+});

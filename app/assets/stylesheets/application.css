@@ -14,6 +14,8 @@
  *
  *=require bootstrap.min.css
  *=require bootstrap-theme.min.css
+ *=require bootstrap-dialog.min.css
+ *=require bootstrap-datepicker.min.css
  *= require_tree .
  *= require_self
  */
@@ -26,4 +28,18 @@
 
 nav {
 	padding: 5px;
+}
+
+select {
+	cursor: pointer;
+}
+
+.modal-header-success {
+	background-color: #009900;
+	color: white;
+}
+
+.modal-header-info {
+	background-color: #009999;
+	color: white;
 }

@@ -5,4 +5,5 @@ Rails.application.routes.draw do
 	get 'index/index'
 	get 'more_info', to: 'index#more_info'
 	get 'about_us', to: 'index#about_us'
+	post 'sign_up', to: 'index#sign_up'
 end
