@@ -46,7 +46,19 @@ function signUp(){
 
 function login() {
 	$("#btnLogin").click(function() {
+		var button = $(this);
 		
+		button.prop("disabled", true);
+		$.post("/login", {
+			email: $("#emailLogin").val(),
+			password: $("#passwordLogin").val()
+		}, function(response) {
+			button.prop("disabled", false);
+			BootstrapDialog.show({
+				title: "Log in response",
+				message: "<pre>" + JSON.stringify(response, null, 4) + "</pre>"
+			});
+		});
 	});
 }
 

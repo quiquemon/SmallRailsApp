@@ -23,4 +23,14 @@ class IndexController < ApplicationController
 			end
 		end
 	end
+	
+	def login
+		respond_to do |format|
+			format.json do
+				render json: {
+					params: params
+				}
+			end
+		end
+	end
 end
