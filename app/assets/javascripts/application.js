@@ -16,52 +16,6 @@
 //=require bootstrap-datepicker.min.js
 //=require_tree .
 
-function cancelButton() {
-	$(".btnCancel").click(function() {
-		$(".close").click();
-	});
-}
-
-function signUp(){
-	$("#btnSignUp").click(function() {
-		var button = $(this);
-		
-		button.prop("disabled", true);
-		$.post("/sign_up", {
-			name: $("#name").val(),
-			lastname: $("#lastname").val(),
-			birthday: $("#birthday").val(),
-			email: $("#email").val(),
-			password: $("#password").val(),
-			newsletter: $("#newsletter").val()
-		}, function(response) {
-			button.prop("disabled", false);
-			BootstrapDialog.show({
-				title: "Sign Up response",
-				message: "<pre>" + JSON.stringify(response, null, 4) + "</pre>"
-			});
-		});
-	});
-}
-
-function login() {
-	$("#btnLogin").click(function() {
-		var button = $(this);
-		
-		button.prop("disabled", true);
-		$.post("/login", {
-			email: $("#emailLogin").val(),
-			password: $("#passwordLogin").val()
-		}, function(response) {
-			button.prop("disabled", false);
-			BootstrapDialog.show({
-				title: "Log in response",
-				message: "<pre>" + JSON.stringify(response, null, 4) + "</pre>"
-			});
-		});
-	});
-}
-
 $(document).ready(function() {
 	// Opciones del DatePicker
 	$(".datetimepicker").datepicker({
@@ -71,8 +25,4 @@ $(document).ready(function() {
 		startDate: "1900-01-01",
 		endDate: new Date()
 	});
-	
-	cancelButton();
-	signUp();
-	login();
 });
