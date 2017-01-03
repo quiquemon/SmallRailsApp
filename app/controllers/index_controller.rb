@@ -4,6 +4,9 @@ class IndexController < ApplicationController
 	include BCrypt
 	
 	def index
+		if !session[:user_id].blank?
+			redirect_to '/dashboard'
+		end
 	end
 
 	def more_info
@@ -25,6 +28,7 @@ class IndexController < ApplicationController
 			if user.valid? # Validate password first.
 				user.password = Password.create(user.password, cost: 14)
 				if user.save
+					reset_session
 					session[:user_id] = user.id
 					format.json do
 						render json: {
@@ -47,6 +51,7 @@ class IndexController < ApplicationController
 		begin
 			user = User.find_by_email!(params[:email])
 			raise ActiveRecord::RecordNotFound unless Password.new(user.password) == params[:password]
+			reset_session
 			session[:user_id] = user.id
 			respond_to do |format|
 				format.json do
