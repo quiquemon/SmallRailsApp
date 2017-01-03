@@ -24,8 +24,14 @@ function cancelButton() {
 function signUp(){
 	$("#btnSignUp").click(function() {
 		var button = $(this);
+		var html =
+			"<div class='progress'>"
+			+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
+			+ "Estamos validando tus datos. ¡Solo un momento!"
+			+ "</div>";
 		
 		button.prop("disabled", true);
+		$("#signUpButtonRow").prepend(html);
 		$.post("/sign_up", {
 			name: $("#name").val(),
 			lastname: $("#lastname").val(),
@@ -34,8 +40,10 @@ function signUp(){
 			password: $("#password").val(),
 			newsletter: $("#newsletter").val()
 		}, function(response) {
-			if (response.errors) {
+			if (response.status) {
 				button.prop("disabled", false);
+				$("#signUpButtonRow .progress").remove();
+				
 				BootstrapDialog.show({
 					title: "Datos incorrectos",
 					message: renderSignUpErrors(response.errors),
@@ -50,7 +58,9 @@ function signUp(){
 					}]
 				});
 			} else {
-				
+				setTimeout(function() {
+					window.location = "/dashboard";
+				}, 2000);
 			}
 		});
 	});
@@ -59,17 +69,40 @@ function signUp(){
 function login() {
 	$("#btnLogin").click(function() {
 		var button = $(this);
+		var html =
+			"<div class='progress'>"
+			+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
+			+ "Estamos validando tus datos. ¡Solo un momento!"
+			+ "</div>";
 		
 		button.prop("disabled", true);
+		$("#loginButtonRow").prepend(html);
 		$.post("/login", {
 			email: $("#emailLogin").val(),
 			password: $("#passwordLogin").val()
 		}, function(response) {
-			button.prop("disabled", false);
-			BootstrapDialog.show({
-				title: "Log in response",
-				message: "<pre>" + JSON.stringify(response, null, 4) + "</pre>"
-			});
+			if (response.status) {
+				button.prop("disabled", false);
+				$("#loginButtonRow .progress").remove();
+				
+				BootstrapDialog.show({
+					title: "Error al iniciar sesión.",
+					message: response.error,
+					type: BootstrapDialog.TYPE_DANGER,
+					buttons: [{
+						label: "Cerrar",
+						icon: "glyphicon glyphicon-remove",
+						cssClass: "btn-danger",
+						action: function(dialog) {
+							dialog.close();
+						}
+					}]
+				});
+			} else {
+				setTimeout(function() {
+					window.location = "/dashboard";
+				}, 1000);
+			}
 		});
 	});
 }

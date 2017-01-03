@@ -15,19 +15,20 @@ class IndexController < ApplicationController
 	def sign_up
 		respond_to do |format|
 			user = User.new
-			user.name       = params[:user].blank?       ? ''           : params[:user]
+			user.name       = params[:name].blank?       ? ''           : params[:name]
 			user.lastname   = params[:lastname].blank?   ? ''           : params[:lastname]
 			user.birthday   = params[:birthday].blank?   ? '2000-01-01' : params[:birthday]
 			user.email      = params[:email].blank?      ? ''           : params[:email]
 			user.password   = params[:password].blank?   ? ''           : params[:password]
-			user.newsletter = params[:newsletter].blank? ? '0'          : params[:newsletter].to_s
+			user.newsletter = params[:newsletter].blank? ? '0'          : params[:newsletter]
 			
 			if user.valid? # Validate password first.
 				user.password = Password.create(user.password, cost: 14)
 				if user.save
+					session[:user_id] = user.id
 					format.json do
 						render json: {
-							string: 'User saved successfully!'
+							status: 0
 						}
 					end
 				end
@@ -35,6 +36,7 @@ class IndexController < ApplicationController
 			
 			format.json do
 				render json: {
+					status: 1,
 					errors: user.errors
 				}
 			end
@@ -42,11 +44,25 @@ class IndexController < ApplicationController
 	end
 	
 	def login
-		respond_to do |format|
-			format.json do
-				render json: {
-					params: params
-				}
+		begin
+			user = User.find_by_email!(params[:email])
+			raise ActiveRecord::RecordNotFound unless Password.new(user.password) == params[:password]
+			session[:user_id] = user.id
+			respond_to do |format|
+				format.json do
+					render json: {
+						status: 0
+					}
+				end
+			end
+		rescue ActiveRecord::RecordNotFound
+			respond_to do |format|
+				format.json do
+					render json: {
+						status: 1,
+						error: 'El correo o la contraseña son erróneas.'
+					}
+				end
 			end
 		end
 	end

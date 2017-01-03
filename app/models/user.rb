@@ -36,7 +36,6 @@ class User < ApplicationRecord
 			message: 'La contraseña debe tener entre 10 y 72 caracteres.'
 		}
 	}
-	validate :valid_newsletter_option?
 	validates :newsletter, presence: { message: 'El boletín es requerido.' }
 	
 private
@@ -47,9 +46,5 @@ private
 	
 	def is_older_than_18?
 		errors[:birthday] << 'Debes ser mayor de edad para registrarte.' unless (birthday.to_date + 18.years) < Date.current
-	end
-	
-	def valid_newsletter_option?
-		errors[:newsletter] << 'Solo se aceptan los valores 1 o 0 para el boletín.' unless newsletter === '0' || newsletter === '1'
 	end
 end
