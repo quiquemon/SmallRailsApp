@@ -1,2 +1,38 @@
-<h1>Dashboard#index</h1>
-<p>Find me in app/views/dashboard/index.html.erb</p>
+<div class="<%= params[:controller] %> container">
+	<div class="jumbotron">
+		<h1>Welcome <%= h @user.name %> to your dashboard!</h1>
+		<br>
+		<p>Here you will be able to edit you personal information, create or join a
+		new team and register for an incoming race.</p>
+	</div>
+	<div class="row">
+		<div class="col-sm-6 col-xs-6">
+			<div class="panel panel-info">
+				<div class="panel-heading">
+					<b>Create a new Team</b>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+						You can run alongside your friends in
+						teams. Create yours now!
+					</p>
+					<a href="/new_team" class="btn btn-info">Create a new team</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6 col-xs-6">
+			<div class="panel panel-success">
+				<div class="panel-heading">
+					<b>Register for a new race</b>
+				</div>
+				<div class="panel-body">
+					<p class="text-justify">
+						There are always new races coming up.
+						Enroll in one now!
+					</p>
+					<a href="/races" class="btn btn-success">Check out all races</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

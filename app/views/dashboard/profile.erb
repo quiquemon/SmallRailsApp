@@ -1,0 +1,103 @@
+<div class="<%= params[:controller] %> container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>Your Profile</h1>
+			<p class="text-justify">You can update your personal information here.</p>
+			<hr>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-6">
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<b>Personal information</b>
+				</div>
+				<div id="updatePersonalInfoPanelBody" class="panel-body">
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label>Name:</label>
+							<div class="input-group">
+								<input type="text" id="name" class="form-control" value="<%= h @user.name %>" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil"></span>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>Last name:</label>
+							<div class="input-group">
+								<input type="text" id="lastname" class="form-control" value="<%= h @user.lastname %>" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil"></span>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>Birthday:</label>
+							<div class="input-group date datetimepicker">
+								<input type="text" id="birthday" class="form-control" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar" style="cursor: pointer;"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-6">
+						<div class="form-group">
+							<label>E-mail:</label>
+							<div class="input-group">
+								<input type="text" id="email" class="form-control" value="<%= h @user.email %>" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-envelope"></span>
+								</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label>Subscribe to newsletter?</label>
+							<select id="newsletter" class="form-control">
+								<option value="1" <%= @user.newsletter ? 'selected' : '' %>>Yes</option>
+								<option value="0" <%= !@user.newsletter ? 'selected' : '' %>>No</option>
+							</select>
+						</div>
+					</div>
+					<div class="col-sm-12">
+						<button id="btnUpdatePersonalInfo" class="btn btn-warning btn-block">Update</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-danger">
+				<div class="panel-heading">
+					<b>Change your password</b>
+				</div>
+				<div id="updatePasswordPanelBody" class="panel-body">
+					<div class="form-group">
+						<label>Old password:</label>
+						<div class="input-group">
+							<input type="password" id="oldPassword" class="form-control" />
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-pencil"></span>
+							</span>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="form-group">
+							<label>New password:</label>
+							<div class="input-group">
+								<input type="password" id="newPassword" class="form-control" />
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-asterisk"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<button id="btnUpdatePassword" class="btn btn-danger btn-block">Update</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	$("#birthday").val("<%= @user.birthday.to_s %>");
+</script>

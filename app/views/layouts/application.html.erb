@@ -5,6 +5,9 @@
 		<meta charset="UTF-8">
 		<%= csrf_meta_tags %>
 		<%= stylesheet_link_tag 'application' %>
+		<script>
+			var CONTROLLER_NAME = "<%= params[:controller] %>";
+		</script>
 		<%= javascript_include_tag 'application' %>
 	</head>
 	<body>
@@ -25,7 +28,8 @@
 							<li><%= link_to 'More Info', { controller: 'index', action: 'more_info' }, class: 'navbar-brand' %></li>
 							<li><%= link_to 'About Us', { controller: 'index', action: 'about_us' }, class: 'navbar-brand' %></li>
 						<% else %>
-							<!-- TODO: Links del Dashboard -->
+							<li><a href="/teams" class="navbar-brand">Manage Teams</a></li>
+							<li><a href="/races" class="navbar-brand">Races</a></li>
 						<% end %>
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
@@ -41,6 +45,11 @@
 								</a>
 							</li>
 						<% else %>
+							<li>
+								<a href="/profile" class="navbar-brand">
+									<span class="glyphicon glyphicon-user"></span> My Profile: <%= "#{@user.name}" %>
+								</a>
+							</li>
 							<li>
 								<a href="/logout" class="navbar-brand">
 									<span class="glyphicon glyphicon-road"></span> Log Out

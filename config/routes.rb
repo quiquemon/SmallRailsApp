@@ -12,4 +12,7 @@ Rails.application.routes.draw do
 	
 	get 'dashboard', to: 'dashboard#index'
 	get 'logout', to: 'dashboard#logout'
+	get 'profile', to: 'dashboard#profile'
+	get 'teams', to: 'dashboard#teams'
+	get 'races', to: 'dashboard#races'
 end
