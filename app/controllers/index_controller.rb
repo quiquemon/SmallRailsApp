@@ -23,7 +23,7 @@ class IndexController < ApplicationController
 			user.birthday   = params[:birthday].blank?   ? '2000-01-01' : params[:birthday]
 			user.email      = params[:email].blank?      ? ''           : params[:email]
 			user.password   = params[:password].blank?   ? ''           : params[:password]
-			user.newsletter = params[:newsletter].blank? ? '0'          : params[:newsletter]
+			user.newsletter = params[:newsletter].blank? ? false        : params[:newsletter]
 			
 			if user.valid? # Validate password first.
 				user.password = Password.create(user.password, cost: 14)
