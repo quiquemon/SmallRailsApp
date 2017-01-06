@@ -62,134 +62,136 @@
 		</nav>
 		<br>
 		<%= yield %>
-		<div id="signupForm" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header modal-header-success">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h3 class="modal-title">Sign Up</h3>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label>Name:</label>
-									<div class="input-group">
-										<input type="text" id="name" class="form-control" />
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-pencil"></span>
-										</span>
+		<% if params[:controller] == 'index' %>
+			<div id="signupForm" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header modal-header-success">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h3 class="modal-title">Sign Up</h3>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>Name:</label>
+										<div class="input-group">
+											<input type="text" id="name" class="form-control" />
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-pencil"></span>
+											</span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label>Last name:</label>
+										<div class="input-group">
+											<input type="text" id="lastname" class="form-control" />
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-pencil"></span>
+											</span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label>Birthday:</label>
+										<div class="input-group date datetimepicker">
+											<input type="text" id="birthday" class="form-control" />
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-calendar" style="cursor: pointer;"></span>
+											</span>
+										</div>
 									</div>
 								</div>
-								<div class="form-group">
-									<label>Last name:</label>
-									<div class="input-group">
-										<input type="text" id="lastname" class="form-control" />
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-pencil"></span>
-										</span>
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>E-mail:</label>
+										<div class="input-group">
+											<input type="text" id="email" class="form-control" />
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-envelope"></span>
+											</span>
+										</div>
 									</div>
-								</div>
-								<div class="form-group">
-									<label>Birthday:</label>
-									<div class="input-group date datetimepicker">
-										<input type="text" id="birthday" class="form-control" />
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-calendar" style="cursor: pointer;"></span>
-										</span>
+									<div class="form-group">
+										<label>Password:</label>
+										<div class="input-group">
+											<input type="password" id="password" class="form-control" />
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-asterisk"></span>
+											</span>
+										</div>
+									</div>
+									<div class="form-group">
+										<label>Subscribe to newsletter?</label>
+										<select id="newsletter" class="form-control">
+											<option value="1">Yes</option>
+											<option value="0">No</option>
+										</select>
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label>E-mail:</label>
-									<div class="input-group">
-										<input type="text" id="email" class="form-control" />
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-envelope"></span>
-										</span>
+						</div>
+						<div class="modal-footer">
+							<div class="col-sm-12">
+								<div id="signUpButtonRow" class="row">
+									<div class="col-sm-6 col-xs-6">
+										<button class="btn btn-danger btn-block btnCancel">Cancel</button>
+									</div>
+									<div class="col-sm-6 col-xs-6">
+										<button id="btnSignUp" class="btn btn-success btn-block">Sign up!</button>
 									</div>
 								</div>
-								<div class="form-group">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="loginForm" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header modal-header-info">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Log in</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-sm-6">
+									<div class="form-group">
+										<label>E-mail:</label>
+										<div class="input-group">
+											<input type="text" id="emailLogin" class="form-control" />
+											<span class="input-group-addon">
+												<span class="glyphicon glyphicon-envelope"></span>
+											</span>
+										</div>
+									</div>
+								</div>
+								<div class="col-sm-6">
 									<label>Password:</label>
 									<div class="input-group">
-										<input type="password" id="password" class="form-control" />
+										<input type="password" id="passwordLogin" class="form-control" />
 										<span class="input-group-addon">
 											<span class="glyphicon glyphicon-asterisk"></span>
 										</span>
 									</div>
 								</div>
-								<div class="form-group">
-									<label>Subscribe to newsletter?</label>
-									<select id="newsletter" class="form-control">
-										<option value="1">Yes</option>
-										<option value="0">No</option>
-									</select>
-								</div>
 							</div>
 						</div>
-					</div>
-					<div class="modal-footer">
-						<div class="col-sm-12">
-							<div id="signUpButtonRow" class="row">
-								<div class="col-sm-6 col-xs-6">
-									<button class="btn btn-danger btn-block btnCancel">Cancel</button>
-								</div>
-								<div class="col-sm-6 col-xs-6">
-									<button id="btnSignUp" class="btn btn-success btn-block">Sign up!</button>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div id="loginForm" class="modal fade" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header modal-header-info">
-						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title">Log in</h4>
-					</div>
-					<div class="modal-body">
-						<div class="row">
-							<div class="col-sm-6">
-								<div class="form-group">
-									<label>E-mail:</label>
-									<div class="input-group">
-										<input type="text" id="emailLogin" class="form-control" />
-										<span class="input-group-addon">
-											<span class="glyphicon glyphicon-envelope"></span>
-										</span>
+						<div class="modal-footer">
+							<div class="col-sm-12">
+								<div id="loginButtonRow" class="row">
+									<div class="col-sm-6 col-xs-6">
+										<button class="btn btn-danger btn-block btnCancel">Cancel</button>
+									</div>
+									<div class="col-sm-6 col-xs-6">
+										<button id="btnLogin" class="btn btn-info btn-block">Log in!</button>
 									</div>
 								</div>
 							</div>
-							<div class="col-sm-6">
-								<label>Password:</label>
-								<div class="input-group">
-									<input type="password" id="passwordLogin" class="form-control" />
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-asterisk"></span>
-									</span>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<div class="col-sm-12">
-							<div id="loginButtonRow" class="row">
-								<div class="col-sm-6 col-xs-6">
-									<button class="btn btn-danger btn-block btnCancel">Cancel</button>
-								</div>
-								<div class="col-sm-6 col-xs-6">
-									<button id="btnLogin" class="btn btn-info btn-block">Log in!</button>
-								</div>
-							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+		<% end %>
 		<footer class="footer">
 			<div align="center" class="container">
 				<p class="text-muted">SmallRailsApp es un proyecto hecho con propósitos educativos.</p>

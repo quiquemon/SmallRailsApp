@@ -14,7 +14,10 @@ Rails.application.routes.draw do
 	get 'logout',           to: 'dashboard#logout'
 	get 'profile',          to: 'dashboard#profile'
 	get 'teams',            to: 'dashboard#teams'
+	get 'new_team',         to: 'dashboard#new_team'
+	get 'manage_team/:id',  to: 'dashboard#manage_team'
 	get 'races',            to: 'dashboard#races'
 	post 'update_profile',  to: 'dashboard#update_profile'
 	post 'update_password', to: 'dashboard#update_password'
+	post 'new_team',        to: 'dashboard#new_team'
 end

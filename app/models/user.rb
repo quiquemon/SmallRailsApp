@@ -1,5 +1,6 @@
 class User < ApplicationRecord
 	self.table_name = 'user'
+	has_many :user_team, foreign_key: 'idUser'
 	
 	validates :name, {
 		presence: { message: 'El nombre es requerido.' },
