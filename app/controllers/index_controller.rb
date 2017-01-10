@@ -2,9 +2,10 @@ require 'BCrypt'
 
 class IndexController < ApplicationController
 	include BCrypt
+	skip_before_action :require_login, only: [:index, :more_info, :about_us, :sign_up, :login]
 	
 	def index
-		if !session[:user_id].blank?
+		unless session[:user_id].blank?
 			redirect_to '/dashboard'
 		end
 	end

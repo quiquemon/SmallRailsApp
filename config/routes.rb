@@ -1,8 +1,6 @@
 # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 Rails.application.routes.draw do
-  get 'dashboard/index'
-
-	root to: 'index#index'
+  	root to: 'index#index'
 	
 	get 'index',     to: 'index#index'
 	get 'more_info', to: 'index#more_info'
@@ -13,11 +11,13 @@ Rails.application.routes.draw do
 	get 'dashboard',        to: 'dashboard#index'
 	get 'logout',           to: 'dashboard#logout'
 	get 'profile',          to: 'dashboard#profile'
-	get 'teams',            to: 'dashboard#teams'
-	get 'new_team',         to: 'dashboard#new_team'
-	get 'manage_team/:id',  to: 'dashboard#manage_team'
-	get 'races',            to: 'dashboard#races'
 	post 'update_profile',  to: 'dashboard#update_profile'
 	post 'update_password', to: 'dashboard#update_password'
-	post 'new_team',        to: 'dashboard#new_team'
+	
+	get 'teams',            to: 'team#index'
+	get 'new_team',         to: 'team#new_team'
+	get 'manage_team/:id',  to: 'team#manage_team'
+	post 'new_team',        to: 'team#new_team'
+	
+	#get 'races',            to: 'race#index'
 end

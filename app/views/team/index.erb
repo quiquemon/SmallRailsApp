@@ -1,6 +1,12 @@
 <div class="<%= params[:controller] %> container">
 	<div class="row">
 		<div class="col-sm-12">
+			<% if flash[:notice] %>
+				<div class="alert alert-<%= flash[:alert_type] %> alert-dismissable">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<%= flash[:notice] %>
+				</div>
+			<% end %>
 			<h1>Team Management</h1>
 			<p class="text-justify">You can create, join or update your teams here.</p>
 		</div>

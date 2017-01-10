@@ -1,0 +1,68 @@
+<div class="<%= params[:controller] %> container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>Team <b><%= h @team.name %></b></h1>
+			<p class="text-justify"><%= h @team.description %></p>
+			<p class="text-info">Member number: <%= h @team.memberNumber %></p>
+			<p class="text-primary">Actual people in the team: <%= @user.user_team.where(idTeam: @team.id).count %></p>
+			<p class="text-success">Creation date: <%= h spanish_date(@team.creationDate) %></p>
+			<a href="/teams" class="btn btn-default btn-sm">
+				<span class="glyphicon glyphicon-arrow-left"></span>
+				Back to Teams
+			</a>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-sm-6">
+			<h4 class='text-danger'>Here you can manage different aspects of your team, like:</h4>
+			<br>
+			<div class="row">
+				<div class="col-xs-6">
+					<a class="btn btn-primary" style="white-space: normal">
+						<span class="glyphicon glyphicon-refresh"></span>
+						Update Team Info
+					</a>
+					<br>
+					<br>
+					<a class="btn btn-success" style="white-space: normal">
+						<span class="glyphicon glyphicon-plus"></span>
+						Add New Member
+					</a>
+				</div>
+				<div class="col-xs-6">
+					<a class="btn btn-warning" style="white-space: normal">
+						<span class="glyphicon glyphicon-minus"></span>
+						Remove Member
+					</a>
+					<br>
+					<br>
+					<a class="btn btn-danger" style="white-space: normal">
+						<span class="glyphicon glyphicon-remove"></span>
+						Delete Team
+					</a>
+				</div>
+			</div>
+			<br>
+			<br>
+		</div>
+		<div class="col-sm-6">
+			<div class="panel panel-warning">
+				<div class="panel-heading">
+					<b>Runners in this team</b>
+				</div>
+				<div class="panel-body">
+					<div class="list-group">
+						<% for user in @users %>
+							<a class='list-group-item'>
+								<p><b>Name:</b> <%= h "#{user.name} #{user.lastname}" %></p>
+								<p><b>Email:</b> <%= h user.email %></p>
+								<p><b>Birthday:</b> <%= h spanish_date(user.birthday) %></p>
+							</a>
+						<% end %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

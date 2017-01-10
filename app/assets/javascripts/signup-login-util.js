@@ -196,6 +196,44 @@ var DashboardController = (function() {
 		});
 	}
 	
+	return {
+		updateProfile: updateProfile,
+		updatePassword: updatePassword
+	};
+})();
+
+var TeamController = (function() {
+	var progressHtml =
+		"<div class='progress'>"
+		+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
+		+ "Estamos validando tus datos. ¡Solo un momento!"
+		+ "</div>";
+
+	function _renderUpdateErrors(errors) {
+		var html =
+			"<div class='alert alert-danger alert-dismissable'>"
+			+ "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>"
+			+ "Ocurrieron algunos errores al momento de actualizar:"
+			+ "<ul>";
+
+		for (var key in errors) {
+			if (errors.hasOwnProperty(key)) {
+				errors[key].forEach(function(error) {
+					html += "<li><b>" + error + "</b></li>";
+				});
+			}
+		}
+
+		return html + "</ul></div>";
+	}
+	
+	function _renderUpdateSuccessMessage(message) {
+		return "<div class='alert alert-success alert-dismissable'>"
+			+ "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>"
+			+ message
+			+ "</div>";
+	}
+	
 	function createNewTeam() {
 		$("#btnNewTeam").click(function() {
 			var button = $(this);
@@ -225,8 +263,6 @@ var DashboardController = (function() {
 	}
 	
 	return {
-		updateProfile: updateProfile,
-		updatePassword: updatePassword,
 		createNewTeam: createNewTeam
 	};
 })();
@@ -239,6 +275,7 @@ $(document).ready(function() {
 	} else if (CONTROLLER_NAME === "dashboard") {
 		DashboardController.updateProfile();
 		DashboardController.updatePassword();
-		DashboardController.createNewTeam();
+	} else if (CONTROLLER_NAME === "team") {
+		TeamController.createNewTeam();
 	}
 });
