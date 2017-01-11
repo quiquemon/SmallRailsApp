@@ -262,8 +262,40 @@ var TeamController = (function() {
 		});
 	}
 	
+	function updateTeam() {
+		$("#btnUpdateTeam").click(function() {
+			var button = $(this);
+			
+			button.prop("disabled", true);
+			$("#updateTeamBody .alert").remove();
+			$("#updateTeamBody").prepend(progressHtml);
+			
+			$.post("/update_team", {
+				name: $("#name").val(),
+				description: $("#description").val(),
+				memberNumber: $("#members").val(),
+				id: TEAM_ID
+			}, function(response) {
+				$("#updateTeamBody .progress").remove();
+				
+				if (response.hasOwnProperty("status")) {
+					if (response.status) {
+						button.prop("disabled", false);
+						$("#updateTeamBody").prepend(_renderUpdateErrors(response.errors));
+					} else {
+						$("#updateTeamBody").prepend(_renderUpdateSuccessMessage(response.message));
+						setTimeout(function() {
+							window.location = response.redirect;
+						}, 3000);
+					}
+				}
+			});
+		});
+	}
+	
 	return {
-		createNewTeam: createNewTeam
+		createNewTeam: createNewTeam,
+		updateTeam: updateTeam
 	};
 })();
 
@@ -277,5 +309,6 @@ $(document).ready(function() {
 		DashboardController.updatePassword();
 	} else if (CONTROLLER_NAME === "team") {
 		TeamController.createNewTeam();
+		TeamController.updateTeam();
 	}
 });

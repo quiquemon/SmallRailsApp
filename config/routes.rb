@@ -17,7 +17,9 @@ Rails.application.routes.draw do
 	get 'teams',            to: 'team#index'
 	get 'new_team',         to: 'team#new_team'
 	get 'manage_team/:id',  to: 'team#manage_team'
+	get 'update_team/:id',  to: 'team#update_team'
 	post 'new_team',        to: 'team#new_team'
+	post 'update_team',     to: 'team#update_team'
 	
 	#get 'races',            to: 'race#index'
 end
