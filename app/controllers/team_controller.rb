@@ -3,6 +3,7 @@ require 'rack'
 class TeamController < ApplicationController
 	include Rack::Utils
 	before_action :set_team, only: [:manage_team, :update_team, :add_to_team, :find_user, :remove_from_team, :delete_team]
+	before_action :verify_team_owner, only: [:update_team, :add_to_team, :find_user, :remove_from_team, :delete_team]
 	
 	def index
 		user_team_array = @user.user_team.to_a.in_groups_of(3)
@@ -20,6 +21,7 @@ class TeamController < ApplicationController
 				team.memberNumber = params[:memberNumber].blank? ? 0  : params[:memberNumber]
 				team.creationDate = Date.current.to_s
 				team.code = SecureRandom.hex(8)
+				team.idUserOwner = @user.id
 				
 				format.json do
 					if team.save
@@ -160,6 +162,27 @@ private
 			else
 				flash[:alert_type] = 'danger'
 				flash[:notice] = 'Ese equipo no se encuentra disponible.'
+				redirect_to '/teams'
+			end
+		end
+	end
+	
+	def verify_team_owner
+		if @team.user != @user
+			if request.xhr?
+				respond_to do |format|
+					format.json do
+						render json: {
+							status: 1,
+							errors: {
+								idTeam: ['Usted no tiene los permisos para hacer cambios sobre este equipo.']
+							}
+						}
+					end
+				end
+			else
+				flash[:alert_type] = 'danger'
+				flash[:notice] = 'Usted no tiene los permisos para hacer cambios sobre este equipo.'
 				redirect_to '/teams'
 			end
 		end

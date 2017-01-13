@@ -21,36 +21,43 @@
 	<hr>
 	<div class="row">
 		<div class="col-sm-6">
-			<h4 class='text-danger'>Here you can manage different aspects of your team, like:</h4>
-			<br>
-			<div class="row">
-				<div class="col-xs-6">
-					<a href="/update_team/<%= @team.id %>" class="btn btn-primary" style="white-space: normal">
-						<span class="glyphicon glyphicon-refresh"></span>
-						Update Team Info
-					</a>
-					<br>
-					<br>
-					<a href="/add_to_team/<%= @team.id %>" class="btn btn-success" style="white-space: normal">
-						<span class="glyphicon glyphicon-plus"></span>
-						Add New Member
-					</a>
+			<% if @team.user == @user %>
+				<h4 class='text-danger'>Here you can manage different aspects of your team, like:</h4>
+				<br>
+				<div class="row">
+					<div class="col-xs-6">
+						<a href="/update_team/<%= @team.id %>" class="btn btn-primary" style="white-space: normal">
+							<span class="glyphicon glyphicon-refresh"></span>
+							Update Team Info
+						</a>
+						<br>
+						<br>
+						<a href="/add_to_team/<%= @team.id %>" class="btn btn-success" style="white-space: normal">
+							<span class="glyphicon glyphicon-plus"></span>
+							Add New Member
+						</a>
+					</div>
+					<div class="col-xs-6">
+						<a href="#" class="btn btn-warning" style="white-space: normal">
+							<span class="glyphicon glyphicon-minus"></span>
+							Remove Member
+						</a>
+						<br>
+						<br>
+						<a href="#" class="btn btn-danger" style="white-space: normal">
+							<span class="glyphicon glyphicon-remove"></span>
+							Delete Team
+						</a>
+					</div>
 				</div>
-				<div class="col-xs-6">
-					<a href="#" class="btn btn-warning" style="white-space: normal">
-						<span class="glyphicon glyphicon-minus"></span>
-						Remove Member
-					</a>
-					<br>
-					<br>
-					<a href="#" class="btn btn-danger" style="white-space: normal">
-						<span class="glyphicon glyphicon-remove"></span>
-						Delete Team
-					</a>
+				<br>
+			<% else %>
+				<div class="col-sm-12">
+					<div class="alert alert-info">
+						Usted no tiene los permisos para hacer cambios sobre este equipo.
+					</div>
 				</div>
-			</div>
-			<br>
-			<br>
+			<% end %>
 		</div>
 		<div class="col-sm-6">
 			<div class="panel panel-warning">
