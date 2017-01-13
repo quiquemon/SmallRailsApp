@@ -29,10 +29,8 @@
 			<div class="row">
 				<% for team in team_group %>
 					<% if team %>
-						<%
-							owner = @user == team.user
-							color = owner ? 'info' : 'success'
-						%>
+						<% owner = @user == team.user %>
+						<% color = owner ? 'info' : 'success' %>
 						<div class="col-sm-4">
 							<div class="panel panel-<%= color %>">
 								<div class="panel-heading">

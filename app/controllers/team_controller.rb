@@ -15,13 +15,13 @@ class TeamController < ApplicationController
 	def new_team
 		if request.post?
 			respond_to do |format|
-				team = Team.new
-				team.name         = params[:name].blank?         ? '' : params[:name]
-				team.description  = params[:description].blank?  ? '' : params[:description]
-				team.memberNumber = params[:memberNumber].blank? ? 0  : params[:memberNumber]
-				team.creationDate = Date.current.to_s
-				team.code = SecureRandom.hex(8)
-				team.idUserOwner = @user.id
+				team = @user.team.new(
+					name:         params[:name].blank?         ? '' : params[:name],
+					description:  params[:description].blank?  ? '' : params[:description],
+					memberNumber: params[:memberNumber].blank? ? 0  : params[:memberNumber],
+					creationDate: Date.current.to_s,
+					code:         SecureRandom.hex(8)
+				)
 				
 				format.json do
 					if team.save
