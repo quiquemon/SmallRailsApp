@@ -1,5 +1,8 @@
+require 'rack'
+
 class TeamController < ApplicationController
-	before_action :set_team, only: [:manage_team, :update_team, :add_to_team, :remove_from_team, :delete_team]
+	include Rack::Utils
+	before_action :set_team, only: [:manage_team, :update_team, :add_to_team, :find_user, :remove_from_team, :delete_team]
 	
 	def index
 		user_team_array = @user.user_team.to_a.in_groups_of(3)
@@ -35,12 +38,10 @@ class TeamController < ApplicationController
 			end
 		end
 	end
-	
-	def join_team
-	end
 
 	def manage_team
-		@users = @team.user_team.to_a.collect { |record| record.user }
+		@users = @team.user_team.select(:idUser, :idTeam).distinct.to_a.collect { |record| record.user }
+		@actual_users = @team.user_team.select(:idUser, :idTeam).distinct.where(idTeam: @team.id).count
 	end
 
 	def update_team
@@ -79,7 +80,59 @@ class TeamController < ApplicationController
 		end
 	end
 
+	def find_user
+		respond_to do |format|
+			records = User.where('email LIKE ? AND id NOT IN (SELECT ut.idUser FROM userteam ut, team t WHERE ut.idTeam = t.id and t.id = ?)',
+				"%#{params[:email]}%", params[:id])
+			
+			format.json do
+				if records.count > 0
+					render json: {
+						status: 0,
+						message: 'Se encontraron los siguientes usuarios con un correo parecido:',
+						users: records.to_a
+					}
+				else
+					render json: {
+						status: 1,
+						message: 'No se encontró ningún correo electrónico parecido.'
+					}
+				end
+			end
+		end
+	end
+	
 	def add_to_team
+		if request.post?
+			respond_to do |format|
+				format.json do
+					begin
+						user = User.find(params[:idUser])
+						full_name = "#{escape_html(user.name)} #{escape_html(user.lastname)}"
+						@team.user_team.new(idUser: user.id, idTeam: @team.id).save
+						render json: {
+							status: 0,
+							message: "El usuario <b>#{full_name}</b> ha sido agregado con éxito a su equipo.",
+							user: {
+								name: escape_html(user.name),
+								lastname: escape_html(user.lastname),
+								email: escape_html(user.email)
+							}
+						}
+					rescue ActiveRecord::RecordNotFound
+						render json: {
+							status: 1,
+							errors: {
+								user: ["El usuario con el ID #{params[:idUser]} no existe."]
+							}
+						}
+					end
+				end
+			end
+		end
+		
+		@users = @team.user_team.select(:idUser, :idTeam).distinct.to_a.collect { |record| record.user }
+		@is_the_team_complete = @team.memberNumber == @team.user_team.select(:idUser, :idTeam).distinct.where(idTeam: @team.id).count
 	end
 
 	def remove_from_team

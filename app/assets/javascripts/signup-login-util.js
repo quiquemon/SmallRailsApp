@@ -203,11 +203,38 @@ var DashboardController = (function() {
 })();
 
 var TeamController = (function() {
-	var progressHtml =
-		"<div class='progress'>"
-		+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
-		+ "Estamos validando tus datos. ¡Solo un momento!"
-		+ "</div>";
+	function _spanishDate(date) {
+		var months = {
+			"01": "Enero",
+			"02": "Febrero",
+			"03": "Marzo",
+			"04": "Abril",
+			"05": "Mayo",
+			"06": "Junio",
+			"07": "Julio",
+			"08": "Agosto",
+			"09": "Septiembre",
+			"10": "Octubre",
+			"11": "Noviembre",
+			"12": "Diciembre"
+		};
+		
+		var dateArray = date.split("-");
+		return dateArray[2] + " de " + months[dateArray[1]] + " de " + dateArray[0];
+	}
+	
+	function _getProgressBar(message) {
+		return "<div class='progress'>"
+			+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
+			+ message
+			+ "</div></div>";
+	}
+	
+	function _renderAlert(message, alertType, closable) {
+		return "<div class='alert alert-" + alertType + (closable ? " alert-dismissable" : "") + "'>"
+			+ (closable ? "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" : "")
+			+ message + "</div>";
+	}
 
 	function _renderUpdateErrors(errors) {
 		var html =
@@ -227,20 +254,13 @@ var TeamController = (function() {
 		return html + "</ul></div>";
 	}
 	
-	function _renderUpdateSuccessMessage(message) {
-		return "<div class='alert alert-success alert-dismissable'>"
-			+ "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>"
-			+ message
-			+ "</div>";
-	}
-	
 	function createNewTeam() {
 		$("#btnNewTeam").click(function() {
 			var button = $(this);
 			
 			button.prop("disabled", true);
 			$("#newTeamBody .alert").remove();
-			$("#newTeamBody").prepend(progressHtml);
+			$("#newTeamBody").prepend(_getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			
 			$.post("/new_team", {
 				name: $("#name").val(),
@@ -253,7 +273,7 @@ var TeamController = (function() {
 					button.prop("disabled", false);
 					$("#newTeamBody").prepend(_renderUpdateErrors(response.errors));
 				} else {
-					$("#newTeamBody").prepend(_renderUpdateSuccessMessage(response.message));
+					$("#newTeamBody").prepend(_renderAlert(response.message, "success"));
 					setTimeout(function() {
 						window.location = "/teams";
 					}, 3000);
@@ -268,7 +288,7 @@ var TeamController = (function() {
 			
 			button.prop("disabled", true);
 			$("#updateTeamBody .alert").remove();
-			$("#updateTeamBody").prepend(progressHtml);
+			$("#updateTeamBody").prepend(_getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			
 			$.post("/update_team", {
 				name: $("#name").val(),
@@ -283,7 +303,7 @@ var TeamController = (function() {
 						button.prop("disabled", false);
 						$("#updateTeamBody").prepend(_renderUpdateErrors(response.errors));
 					} else {
-						$("#updateTeamBody").prepend(_renderUpdateSuccessMessage(response.message));
+						$("#updateTeamBody").prepend(_renderAlert(response.message, "success", true));
 						setTimeout(function() {
 							window.location = response.redirect;
 						}, 3000);
@@ -293,9 +313,105 @@ var TeamController = (function() {
 		});
 	}
 	
+	function findUser() {
+		function _renderFoundRunnersList(runners) {
+			var html = "";
+
+			runners.forEach(function(e) {
+				var panel = "<div class='panel panel-info'>"
+					+ "<div class='panel-heading'><b>Runner found!</b></div>"
+					+ "<div class='panel-body'>"
+					+ "<div class='list-group'>"
+					+ "<a class='list-group-item'><span class='glyphicon glyphicon-user'></span> " + e.name + " " + e.lastname + "</a>"
+					+ "<a class='list-group-item'><span class='glyphicon glyphicon-list-alt'></span> " + _spanishDate(e.birthday) + "</a>"
+					+ "<a class='list-group-item'><span class='glyphicon glyphicon-envelope'></span> " + e.email + "</a>"
+					+ "</div>"
+					+ "<button class='btn btn-success btnAddUser' id='" + e.id + "'>"
+					+ "<span class='glyphicon glyphicon-plus'></span> Add To Team</button>"
+					+ "</div></div>";
+
+				html += panel;
+			});
+
+			return html;
+		}
+		
+		$("#btnFindUser").click(function() {
+			var button = $(this);
+			
+			button.prop("disabled", true);
+			$("#findUserBody").empty();
+			$("#findUserBody").append(_getProgressBar("Buscando al corredor. ¡Solo un momento!"));
+			
+			$.get("/find_user/" + TEAM_ID, {
+				email: $("#email").val()
+			}, function(response) {
+				$("#findUserBody").empty();
+				button.prop("disabled", false);
+				
+				if (response.status) {	
+					$("#findUserBody").append(_renderAlert(response.message, "danger", false));
+				} else {
+					$("#findUserBody").append(_renderAlert(response.message, "success", false));
+					$("#findUserBody").append(_renderFoundRunnersList(response.users));
+				}
+			});
+			
+		});
+	}
+	
+	function addUser() {
+		function _addUserToRunnersList(user) {
+			var html = "<a class='list-group-item'>"
+				+ user.name + " " + user.lastname + " | <i>" + user.email + "</i>"
+				+ "</a>";
+			
+			$("#runnersList").append(html);
+		}
+		
+		$("#findUserBody").on("click", ".btnAddUser", function() {
+			var button = $(this);
+			var idUser = button.attr("id");
+			var panelBody = $(this.parentElement);
+			var panel = $(this.parentElement.parentElement);
+			
+			button.prop("disabled", true);
+			panelBody.append("<br><br>" + _getProgressBar("Agregando al usuario a tu equipo. ¡Solo un momento!"));
+			
+			$.post("/add_to_team", {
+				id: TEAM_ID,
+				idUser: idUser
+			}, function(response) {
+				panelBody.children(".progress, br, .alert").remove();
+				
+				if (response.status) {
+					panelBody.append("<br><br>" + _renderUpdateErrors(response.errors));
+					button.prop("disabled", false);
+				} else {
+					panel.remove();
+					_addUserToRunnersList(response.user);
+					BootstrapDialog.show({
+						title: "Usuario agregado",
+						message: response.message,
+						type: BootstrapDialog.TYPE_SUCCESS,
+						buttons: [{
+							label: "Cerrar",
+							cssClass: "btn-success",
+							action: function(dialog) {
+								dialog.close();
+							}
+						}]
+					});
+				}
+			});
+		});
+	}
+	
 	return {
 		createNewTeam: createNewTeam,
-		updateTeam: updateTeam
+		updateTeam: updateTeam,
+		findUser: findUser,
+		addUser: addUser
 	};
 })();
 
@@ -310,5 +426,7 @@ $(document).ready(function() {
 	} else if (CONTROLLER_NAME === "team") {
 		TeamController.createNewTeam();
 		TeamController.updateTeam();
+		TeamController.findUser();
+		TeamController.addUser();
 	}
 });

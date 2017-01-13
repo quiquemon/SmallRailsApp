@@ -28,7 +28,6 @@ development:
 #  <<: *default
 #  database: smallrailsapp_test
 
-#production:
-#  <<: *default
-#  database: smallrailsapp_production
-
+production:
+  <<: *default
+  database: smallrailsapp

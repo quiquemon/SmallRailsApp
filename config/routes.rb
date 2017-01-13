@@ -14,12 +14,15 @@ Rails.application.routes.draw do
 	post 'update_profile',  to: 'dashboard#update_profile'
 	post 'update_password', to: 'dashboard#update_password'
 	
-	get 'teams',            to: 'team#index'
-	get 'new_team',         to: 'team#new_team'
-	get 'manage_team/:id',  to: 'team#manage_team'
-	get 'update_team/:id',  to: 'team#update_team'
-	post 'new_team',        to: 'team#new_team'
-	post 'update_team',     to: 'team#update_team'
+	get 'teams',           to: 'team#index'
+	get 'new_team',        to: 'team#new_team'
+	get 'manage_team/:id', to: 'team#manage_team'
+	get 'update_team/:id', to: 'team#update_team'
+	get 'add_to_team/:id', to: 'team#add_to_team'
+	get 'find_user/:id',   to: 'team#find_user'
+	post 'new_team',       to: 'team#new_team'
+	post 'update_team',    to: 'team#update_team'
+	post 'add_to_team',    to: 'team#add_to_team'
 	
 	#get 'races',            to: 'race#index'
 end

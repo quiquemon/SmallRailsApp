@@ -1,10 +1,16 @@
 <div class="<%= params[:controller] %> container">
 	<div class="row">
 		<div class="col-sm-12">
+			<% if flash[:notice] %>
+				<div class="alert alert-<%= flash[:alert_type] %> alert-dismissable">
+					<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+					<%= flash[:notice] %>
+				</div>
+			<% end %>
 			<h1>Team <b><%= h @team.name %></b></h1>
 			<p class="text-justify"><%= h @team.description %></p>
-			<p class="text-info">Member number: <%= h @team.memberNumber %></p>
-			<p class="text-primary">Actual people in the team: <%= @user.user_team.where(idTeam: @team.id).count %></p>
+			<p class="text-info">Number of members: <%= h @team.memberNumber %></p>
+			<p class="text-primary">Actual runners in the team: <%= @actual_users %></p>
 			<p class="text-success">Creation date: <%= h spanish_date(@team.creationDate) %></p>
 			<a href="/teams" class="btn btn-default btn-sm">
 				<span class="glyphicon glyphicon-arrow-left"></span>
@@ -25,7 +31,7 @@
 					</a>
 					<br>
 					<br>
-					<a href="#" class="btn btn-success" style="white-space: normal">
+					<a href="/add_to_team/<%= @team.id %>" class="btn btn-success" style="white-space: normal">
 						<span class="glyphicon glyphicon-plus"></span>
 						Add New Member
 					</a>
