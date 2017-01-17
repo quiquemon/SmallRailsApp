@@ -25,6 +25,5 @@ Rails.application.routes.draw do
 	post 'update_team',         to: 'team#update_team'
 	post 'add_to_team',	        to: 'team#add_to_team'
 	post 'remove_from_team',    to: 'team#remove_from_team'
-	
-	#get 'races',            to: 'race#index'
+	post 'delete_team',         to: 'team#delete_team'
 end

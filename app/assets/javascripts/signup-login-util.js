@@ -461,12 +461,65 @@ var TeamController = (function() {
 		});
 	}
 	
+	function deleteTeam() {
+		$("#btnDeleteTeam").click(function() {
+			function _deleteTeam(dialog) {
+				var deleteButton = $(this[0]);
+				
+				deleteButton.prop("disabled", true);
+				$(".btn-primary").prop("disabled", true);
+				dialog.setMessage(
+					message
+					+ "<br><br>"
+					+ _getProgressBar("Eliminando a tu equipo. ¡Solo un momento!")
+				);
+		
+				$.post("/delete_team", {
+					id: idTeam
+				}, function(response) {
+					if (response.status) {
+						deleteButton.prop("disabled", false);
+						$(".btn-primary").prop("disabled", false);
+						dialog.setMessage(message + "<br><br>" + _renderUpdateErrors(response.errors));
+					} else {
+						dialog.setMessage(message + "<br><br>" + _renderAlert(response.message, "success", false));
+						setTimeout(function() {
+							window.location = "/teams";
+						}, 2000);
+					}
+				});
+			}
+			
+			var idTeam = $(this).attr("id-team");
+			var message = "Are you sure you want to delete this team? <b>You won't be able to undo this action.</b>";
+			
+			BootstrapDialog.show({
+				title: "Delete Team",
+				message: message,
+				type: BootstrapDialog.TYPE_DANGER,
+				closable: false,
+				buttons: [{
+					label: "Delete",
+					cssClass: "btn-danger",
+					action: _deleteTeam
+				}, {
+					label: "Cancel",
+					cssClass: "btn-primary",
+					action: function(dialog) {
+						dialog.close();
+					}
+				}]
+			});
+		});
+	}
+	
 	return {
 		createNewTeam: createNewTeam,
 		updateTeam: updateTeam,
 		findUser: findUser,
 		addUser: addUser,
-		removeFromTeam: removeFromTeam
+		removeFromTeam: removeFromTeam,
+		deleteTeam: deleteTeam
 	};
 })();
 
@@ -484,5 +537,6 @@ $(document).ready(function() {
 		TeamController.findUser();
 		TeamController.addUser();
 		TeamController.removeFromTeam();
+		TeamController.deleteTeam();
 	}
 });

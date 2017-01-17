@@ -131,10 +131,10 @@ class TeamController < ApplicationController
 					end
 				end
 			end
+		else
+			@users = @team.user_team.select(:idUser, :idTeam).distinct.to_a.collect { |record| record.user }
+			@is_the_team_complete = @team.memberNumber == @team.user_team.select(:idUser, :idTeam).distinct.where(idTeam: @team.id).count
 		end
-		
-		@users = @team.user_team.select(:idUser, :idTeam).distinct.to_a.collect { |record| record.user }
-		@is_the_team_complete = @team.memberNumber == @team.user_team.select(:idUser, :idTeam).distinct.where(idTeam: @team.id).count
 	end
 
 	def remove_from_team
@@ -158,13 +158,22 @@ class TeamController < ApplicationController
 					end
 				end
 			end
+		else
+			@users = @team.user_team.select(:idUser, :idTeam).distinct.to_a.collect { |record| record.user }
+			@team_leader = @users.find { |user| user == @user }
 		end
-		
-		@users = @team.user_team.select(:idUser, :idTeam).distinct.to_a.collect { |record| record.user }
-		@team_leader = @users.find { |user| user == @user }
 	end
 
 	def delete_team
+		respond_to do |format|
+			format.json do
+				@team.destroy
+				render json: {
+					status: 0,
+					message: 'Su equipo ha sido eliminado con éxito.'
+				}
+			end
+		end
 	end
 	
 private

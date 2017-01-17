@@ -5,9 +5,7 @@ class IndexController < ApplicationController
 	skip_before_action :require_login, only: [:index, :more_info, :about_us, :sign_up, :login]
 	
 	def index
-		unless session[:user_id].blank?
-			redirect_to '/dashboard'
-		end
+		redirect_to '/dashboard' unless session[:user_id].blank?
 	end
 
 	def more_info
