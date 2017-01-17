@@ -407,11 +407,66 @@ var TeamController = (function() {
 		});
 	}
 	
+	function removeFromTeam() {
+		$("#removeFromTeamBody").on("click", ".btnRemoveFromTeam", function() {
+			function _removeMember(dialog) {
+				var removeButton = $(this[0]);
+				
+				removeButton.prop("disabled", true);
+				$(".btn-danger").prop("disabled", true);
+				dialog.setMessage(
+					message
+					+ "<br><br>"
+					+ _getProgressBar("Removiendo al usuario. ¡Solo un momento!")
+				);
+				
+				$.post("/remove_from_team", {
+					id: TEAM_ID,
+					idUser: idUser
+				}, function(response) {
+					if (response.status) {
+						removeButton.prop("disabled", false);
+						$(".btn-danger").prop("disabled", false);
+						dialog.setMessage(message + "<br><br>" + _renderUpdateErrors(response.errors));
+					} else {
+						dialog.setMessage(message + "<br><br>" + _renderAlert(response.message, "success", false));
+						setTimeout(function() {
+							window.location.reload();
+						}, 3000);
+					}
+				});
+			}
+			
+			var button = $(this);
+			var idUser = button.attr("id");
+			var message = "Do you really want to remove <b>" + button.attr("user") + "</b> from your team?";
+			
+			BootstrapDialog.show({
+				title: "Remove from team",
+				message: message,
+				type: BootstrapDialog.TYPE_WARNING,
+				closable: false,
+				buttons: [{
+					label: "Remove",
+					cssClass: "btn-warning",
+					action: _removeMember
+				}, {
+					label: "Cancel",
+					cssClass: "btn-danger",
+					action: function(dialog) {
+						dialog.close();
+					}
+				}]
+			});
+		});
+	}
+	
 	return {
 		createNewTeam: createNewTeam,
 		updateTeam: updateTeam,
 		findUser: findUser,
-		addUser: addUser
+		addUser: addUser,
+		removeFromTeam: removeFromTeam
 	};
 })();
 
@@ -428,5 +483,6 @@ $(document).ready(function() {
 		TeamController.updateTeam();
 		TeamController.findUser();
 		TeamController.addUser();
+		TeamController.removeFromTeam();
 	}
 });

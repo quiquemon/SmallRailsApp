@@ -138,6 +138,30 @@ class TeamController < ApplicationController
 	end
 
 	def remove_from_team
+		if request.post?
+			respond_to do |format|
+				format.json do
+					affected_rows = @team.user_team.where(idUser: params[:idUser]).delete_all
+					
+					if affected_rows == 0
+						render json: {
+							status: 1,
+							errors: {
+								user: ["El usuario con ID #{params[:idUser]} no se encuentra en este equipo."]
+							}
+						}
+					else
+						render json: {
+							status: 0,
+							message: 'El usuario se ha removido del equipo con éxito.'
+						}
+					end
+				end
+			end
+		end
+		
+		@users = @team.user_team.select(:idUser, :idTeam).distinct.to_a.collect { |record| record.user }
+		@team_leader = @users.find { |user| user == @user }
 	end
 
 	def delete_team

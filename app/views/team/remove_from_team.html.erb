@@ -1,2 +1,86 @@
-<h1>TeamController#remove_from_team</h1>
-<p>Find me in app/views/team_controller/remove_from_team.html.erb</p>
+<div class="<%= params[:controller] %> container">
+	<div class="row">
+		<div class="col-sm-12">
+			<h1>Remove from <i><%= h @team.name %></i></h1>
+			<p class="text-justify">Here you can remove members from your team.</p>
+			<a href="/manage_team/<%= @team.id %>" class="btn btn-default btn-sm">
+				<span class="glyphicon glyphicon-arrow-left"></span>
+				Back to Manage Team
+			</a>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<h4 class="text-info">All team members are listed down below:</h4>
+				</div>
+				<div class="panel-body">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<b>Team Leader</b>
+						</div>
+						<div class="panel-body">
+							<div class="list-group">
+								<a class="list-group-item">
+									<span class="glyphicon glyphicon-user"></span>
+									<%= h "#{@team_leader.name} #{@team_leader.lastname}" %>
+								</a>
+								<a class="list-group-item">
+									<span class="glyphicon glyphicon-list-alt"></span>
+									<%= h spanish_date(@team_leader.birthday) %>
+								</a>
+								<a class="list-group-item">
+									<span class="glyphicon glyphicon-envelope"></span>
+									<%= h @team_leader.email %>
+								</a>
+							</div>
+						</div>
+					</div>
+					<% if @users.count > 1 %>
+						<div class="panel panel-success">
+							<div class="panel-heading">
+								<b>Team Members</b>
+							</div>
+							<div id="removeFromTeamBody" class="panel-body">
+								<div class="list-group">
+									<% for user in @users %>
+										<% if user != @user %>
+											<a class="list-group-item">
+												<p>
+													<span class="glyphicon glyphicon-user"></span>
+													<%= h "#{user.name} #{user.lastname}" %>
+												</p>
+												<p>
+													<span class="glyphicon glyphicon-list-alt"></span>
+													<%= h user.email %>
+												</p>
+												<p>
+													<span class="glyphicon glyphicon-envelope"></span>
+													<%= h spanish_date(user.birthday) %>
+												</p>
+												<button id="<%= user.id %>" class="btn btn-warning btnRemoveFromTeam" user="<%= h "#{user.name} #{user.lastname}" %>">
+													<span class="glyphicon glyphicon-minus"></span>
+													Remove
+												</button>
+											</a>
+										<% end %>
+									<% end %>
+								</div>
+							</div>
+						</div>
+					<% else %>
+						<div class="alert alert-success">
+							Este equipo está conformado únicamente por un integrante
+							(el líder del equipo).
+						</div>
+					<% end %>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	var TEAM_ID = <%= @team.id %>;
+</script>
