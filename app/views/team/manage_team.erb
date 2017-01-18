@@ -11,7 +11,8 @@
 			<p class="text-justify"><%= h @team.description %></p>
 			<p class="text-info">Number of members: <%= h @team.memberNumber %></p>
 			<p class="text-primary">Actual runners in the team: <%= @actual_users %></p>
-			<p class="text-success">Creation date: <%= h spanish_date(@team.creationDate) %></p>
+			<p class="text-success">Team code: <i><%= @team.code %></i></p>
+			<p class="text-warning">Creation date: <%= h spanish_date(@team.creationDate) %></p>
 			<a href="/teams" class="btn btn-default btn-sm">
 				<span class="glyphicon glyphicon-arrow-left"></span>
 				Back to Teams

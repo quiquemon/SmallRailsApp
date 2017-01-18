@@ -222,19 +222,6 @@ var TeamController = (function() {
 		var dateArray = date.split("-");
 		return dateArray[2] + " de " + months[dateArray[1]] + " de " + dateArray[0];
 	}
-	
-	function _getProgressBar(message) {
-		return "<div class='progress'>"
-			+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
-			+ message
-			+ "</div></div>";
-	}
-	
-	function _renderAlert(message, alertType, closable) {
-		return "<div class='alert alert-" + alertType + (closable ? " alert-dismissable" : "") + "'>"
-			+ (closable ? "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>" : "")
-			+ message + "</div>";
-	}
 
 	function _renderUpdateErrors(errors) {
 		var html =
@@ -260,7 +247,7 @@ var TeamController = (function() {
 			
 			button.prop("disabled", true);
 			$("#newTeamBody .alert").remove();
-			$("#newTeamBody").prepend(_getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
+			$("#newTeamBody").prepend(AppUtil.getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			
 			$.post("/new_team", {
 				name: $("#name").val(),
@@ -273,7 +260,7 @@ var TeamController = (function() {
 					button.prop("disabled", false);
 					$("#newTeamBody").prepend(_renderUpdateErrors(response.errors));
 				} else {
-					$("#newTeamBody").prepend(_renderAlert(response.message, "success"));
+					$("#newTeamBody").prepend(AppUtil.renderAlert(response.message, "success"));
 					setTimeout(function() {
 						window.location = "/teams";
 					}, 3000);
@@ -288,7 +275,7 @@ var TeamController = (function() {
 			
 			button.prop("disabled", true);
 			$("#updateTeamBody .alert").remove();
-			$("#updateTeamBody").prepend(_getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
+			$("#updateTeamBody").prepend(AppUtil.getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			
 			$.post("/update_team", {
 				name: $("#name").val(),
@@ -303,7 +290,7 @@ var TeamController = (function() {
 						button.prop("disabled", false);
 						$("#updateTeamBody").prepend(_renderUpdateErrors(response.errors));
 					} else {
-						$("#updateTeamBody").prepend(_renderAlert(response.message, "success", true));
+						$("#updateTeamBody").prepend(AppUtil.renderAlert(response.message, "success", true));
 						setTimeout(function() {
 							window.location = response.redirect;
 						}, 3000);
@@ -341,7 +328,7 @@ var TeamController = (function() {
 			
 			button.prop("disabled", true);
 			$("#findUserBody").empty();
-			$("#findUserBody").append(_getProgressBar("Buscando al corredor. ¡Solo un momento!"));
+			$("#findUserBody").append(AppUtil.getProgressBar("Buscando al corredor. ¡Solo un momento!"));
 			
 			$.get("/find_user/" + TEAM_ID, {
 				email: $("#email").val()
@@ -350,9 +337,9 @@ var TeamController = (function() {
 				button.prop("disabled", false);
 				
 				if (response.status) {	
-					$("#findUserBody").append(_renderAlert(response.message, "danger", false));
+					$("#findUserBody").append(AppUtil.renderAlert(response.message, "danger", false));
 				} else {
-					$("#findUserBody").append(_renderAlert(response.message, "success", false));
+					$("#findUserBody").append(AppUtil.renderAlert(response.message, "success", false));
 					$("#findUserBody").append(_renderFoundRunnersList(response.users));
 				}
 			});
@@ -376,7 +363,7 @@ var TeamController = (function() {
 			var panel = $(this.parentElement.parentElement);
 			
 			button.prop("disabled", true);
-			panelBody.append("<br><br>" + _getProgressBar("Agregando al usuario a tu equipo. ¡Solo un momento!"));
+			panelBody.append("<br><br>" + AppUtil.getProgressBar("Agregando al usuario a tu equipo. ¡Solo un momento!"));
 			
 			$.post("/add_to_team", {
 				id: TEAM_ID,
@@ -417,7 +404,7 @@ var TeamController = (function() {
 				dialog.setMessage(
 					message
 					+ "<br><br>"
-					+ _getProgressBar("Removiendo al usuario. ¡Solo un momento!")
+					+ AppUtil.getProgressBar("Removiendo al usuario. ¡Solo un momento!")
 				);
 				
 				$.post("/remove_from_team", {
@@ -429,7 +416,7 @@ var TeamController = (function() {
 						$(".btn-danger").prop("disabled", false);
 						dialog.setMessage(message + "<br><br>" + _renderUpdateErrors(response.errors));
 					} else {
-						dialog.setMessage(message + "<br><br>" + _renderAlert(response.message, "success", false));
+						dialog.setMessage(message + "<br><br>" + AppUtil.renderAlert(response.message, "success", false));
 						setTimeout(function() {
 							window.location.reload();
 						}, 3000);
@@ -471,7 +458,7 @@ var TeamController = (function() {
 				dialog.setMessage(
 					message
 					+ "<br><br>"
-					+ _getProgressBar("Eliminando a tu equipo. ¡Solo un momento!")
+					+ AppUtil.getProgressBar("Eliminando a tu equipo. ¡Solo un momento!")
 				);
 		
 				$.post("/delete_team", {
@@ -482,7 +469,7 @@ var TeamController = (function() {
 						$(".btn-primary").prop("disabled", false);
 						dialog.setMessage(message + "<br><br>" + _renderUpdateErrors(response.errors));
 					} else {
-						dialog.setMessage(message + "<br><br>" + _renderAlert(response.message, "success", false));
+						dialog.setMessage(message + "<br><br>" + AppUtil.renderAlert(response.message, "success", false));
 						setTimeout(function() {
 							window.location = "/teams";
 						}, 2000);
