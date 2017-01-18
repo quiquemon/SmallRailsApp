@@ -40,7 +40,7 @@ class IndexController < ApplicationController
 			format.json do
 				render json: {
 					status: 1,
-					errors: user.errors
+					errors: user.errors.values.flatten
 				}
 			end
 		end

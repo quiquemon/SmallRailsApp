@@ -1,21 +1,4 @@
 var IndexController = (function() {
-	function _renderSignUpErrors(errors) {
-		var html =
-			"<div class='col-sm-12'>"
-			+ "<strong>Ocurrieron algunos errores al tratar de registrarte:</strong><br><br>"
-			+ "<div class='list-group'>";
-
-		for (var key in errors) {
-			if (errors.hasOwnProperty(key)) {
-				errors[key].forEach(function(error) {
-					html += "<a class='list-group-item'>" + error + "</a>";
-				});
-			}
-		}
-
-		return html + "</div></div>";
-	}
-
 	function cancelButton() {
 		$(".btnCancel").click(function() {
 			$(".close").click();
@@ -25,14 +8,9 @@ var IndexController = (function() {
 	function signUp(){
 		$("#btnSignUp").click(function() {
 			var button = $(this);
-			var html =
-				"<div class='progress'>"
-				+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
-				+ "Estamos validando tus datos. ¡Solo un momento!"
-				+ "</div>";
 
 			button.prop("disabled", true);
-			$("#signUpButtonRow").prepend(html);
+			$("#signUpButtonRow").prepend(AppUtil.getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			$.post("/sign_up", {
 				name: $("#name").val(),
 				lastname: $("#lastname").val(),
@@ -47,7 +25,7 @@ var IndexController = (function() {
 
 					BootstrapDialog.show({
 						title: "Datos incorrectos",
-						message: _renderSignUpErrors(response.errors),
+						message: AppUtil.renderErrors("Ocurrieron algunos errores al tratar de registrarte:", response.errors),
 						type: BootstrapDialog.TYPE_DANGER,
 						buttons: [{
 							label: "Cerrar",
@@ -70,14 +48,9 @@ var IndexController = (function() {
 	function login() {
 		$("#btnLogin").click(function() {
 			var button = $(this);
-			var html =
-				"<div class='progress'>"
-				+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
-				+ "Estamos validando tus datos. ¡Solo un momento!"
-				+ "</div>";
 
 			button.prop("disabled", true);
-			$("#loginButtonRow").prepend(html);
+			$("#loginButtonRow").prepend(AppUtil.getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			$.post("/login", {
 				email: $("#emailLogin").val(),
 				password: $("#passwordLogin").val()
@@ -108,52 +81,25 @@ var IndexController = (function() {
 		});
 	}
 	
+	function init() {
+		cancelButton();
+		signUp();
+		login();
+	}
+	
 	return {
-		cancelButton: cancelButton,
-		signUp: signUp,
-		login: login
+		init: init
 	};
 })();
 
 var DashboardController = (function() {
-	var progressHtml =
-		"<div class='progress'>"
-		+ "<div class='progress-bar progress-bar-striped active' style='width:100%'>"
-		+ "Estamos validando tus datos. ¡Solo un momento!"
-		+ "</div>";
-	
-	function _renderUpdateErrors(errors) {
-		var html =
-			"<div class='alert alert-danger alert-dismissable'>"
-			+ "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>"
-			+ "Ocurrieron algunos errores al momento de actualizar:"
-			+ "<ul>";
-
-		for (var key in errors) {
-			if (errors.hasOwnProperty(key)) {
-				errors[key].forEach(function(error) {
-					html += "<li><b>" + error + "</b></li>";
-				});
-			}
-		}
-
-		return html + "</ul></div>";
-	}
-	
-	function _renderUpdateSuccessMessage(message) {
-		return "<div class='alert alert-success alert-dismissable'>"
-			+ "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>"
-			+ message
-			+ "</div>";
-	}
-	
 	function updateProfile() {
 		$("#btnUpdatePersonalInfo").click(function() {
 			var button = $(this);
 			
 			button.prop("disabled", true);
 			$("#updatePersonalInfoPanelBody .alert").remove();
-			$("#updatePersonalInfoPanelBody").prepend(progressHtml);
+			$("#updatePersonalInfoPanelBody").prepend(AppUtil.getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			
 			$.post("/update_profile", {
 				name: $("#name").val(),
@@ -166,8 +112,8 @@ var DashboardController = (function() {
 				$("#updatePersonalInfoPanelBody .progress").remove();
 				$("#updatePersonalInfoPanelBody").prepend(
 					response.status
-					? _renderUpdateErrors(response.errors)
-					: _renderUpdateSuccessMessage(response.message)
+					? AppUtil.renderErrors("Ocurrieron algunos errores al actualizar tus datos:", response.errors)
+					: AppUtil.renderAlert(response.message, "success", true)
 				);
 			});
 		});
@@ -179,7 +125,7 @@ var DashboardController = (function() {
 			
 			button.prop("disabled", true);
 			$("#updatePasswordPanelBody .alert").remove();
-			$("#updatePasswordPanelBody").prepend(progressHtml);
+			$("#updatePasswordPanelBody").prepend(AppUtil.getProgressBar("Estamos validando tus datos. ¡Solo un momento!"));
 			
 			$.post("/update_password", {
 				oldPassword: $("#oldPassword").val(),
@@ -189,16 +135,20 @@ var DashboardController = (function() {
 				$("#updatePasswordPanelBody .progress").remove();
 				$("#updatePasswordPanelBody").prepend(
 					response.status
-					? _renderUpdateErrors(response.errors)
-					: _renderUpdateSuccessMessage(response.message)
+					? AppUtil.renderErrors("Ocurrieron algunos errores al actualizar tu contraseña:", response.errors)
+					: AppUtil.renderAlert(response.message, "success", true)
 				);
 			});
 		});
 	}
 	
+	function init() {
+		updateProfile();
+		updatePassword();
+	}
+	
 	return {
-		updateProfile: updateProfile,
-		updatePassword: updatePassword
+		init: init
 	};
 })();
 
@@ -222,24 +172,6 @@ var TeamController = (function() {
 		var dateArray = date.split("-");
 		return dateArray[2] + " de " + months[dateArray[1]] + " de " + dateArray[0];
 	}
-
-	function _renderUpdateErrors(errors) {
-		var html =
-			"<div class='alert alert-danger alert-dismissable'>"
-			+ "<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>"
-			+ "Ocurrieron algunos errores al momento de actualizar:"
-			+ "<ul>";
-
-		for (var key in errors) {
-			if (errors.hasOwnProperty(key)) {
-				errors[key].forEach(function(error) {
-					html += "<li><b>" + error + "</b></li>";
-				});
-			}
-		}
-
-		return html + "</ul></div>";
-	}
 	
 	function createNewTeam() {
 		$("#btnNewTeam").click(function() {
@@ -258,7 +190,9 @@ var TeamController = (function() {
 				
 				if (response.status) {
 					button.prop("disabled", false);
-					$("#newTeamBody").prepend(_renderUpdateErrors(response.errors));
+					$("#newTeamBody").prepend(
+						AppUtil.renderErrors("Ocurrieron algunos errores al momento de crear el equipo:", response.errors)
+					);
 				} else {
 					$("#newTeamBody").prepend(AppUtil.renderAlert(response.message, "success"));
 					setTimeout(function() {
@@ -288,7 +222,9 @@ var TeamController = (function() {
 				if (response.hasOwnProperty("status")) {
 					if (response.status) {
 						button.prop("disabled", false);
-						$("#updateTeamBody").prepend(_renderUpdateErrors(response.errors));
+						$("#updateTeamBody").prepend(
+							AppUtil.renderErrors("Ocurrieron algunos errores al momento de actualizar:", response.errors)
+						);
 					} else {
 						$("#updateTeamBody").prepend(AppUtil.renderAlert(response.message, "success", true));
 						setTimeout(function() {
@@ -372,7 +308,7 @@ var TeamController = (function() {
 				panelBody.children(".progress, br, .alert").remove();
 				
 				if (response.status) {
-					panelBody.append("<br><br>" + _renderUpdateErrors(response.errors));
+					panelBody.append("<br><br>" + AppUtil.renderErrors("Ocurrió un problema al agregar al usuario:", response.errors));
 					button.prop("disabled", false);
 				} else {
 					panel.remove();
@@ -414,7 +350,10 @@ var TeamController = (function() {
 					if (response.status) {
 						removeButton.prop("disabled", false);
 						$(".btn-danger").prop("disabled", false);
-						dialog.setMessage(message + "<br><br>" + _renderUpdateErrors(response.errors));
+						dialog.setMessage(message
+							+ "<br><br>"
+							+ AppUtil.renderErrors("Ocurrió un error al remover al usuario:", response.errors)
+						);
 					} else {
 						dialog.setMessage(message + "<br><br>" + AppUtil.renderAlert(response.message, "success", false));
 						setTimeout(function() {
@@ -467,7 +406,10 @@ var TeamController = (function() {
 					if (response.status) {
 						deleteButton.prop("disabled", false);
 						$(".btn-primary").prop("disabled", false);
-						dialog.setMessage(message + "<br><br>" + _renderUpdateErrors(response.errors));
+						dialog.setMessage(message
+							+ "<br><br>"
+							+ AppUtil.renderErrors("Ocurrió un error al eliminar el equipo:", response.errors)
+						);
 					} else {
 						dialog.setMessage(message + "<br><br>" + AppUtil.renderAlert(response.message, "success", false));
 						setTimeout(function() {
@@ -500,30 +442,16 @@ var TeamController = (function() {
 		});
 	}
 	
+	function init() {
+		createNewTeam();
+		updateTeam();
+		findUser();
+		addUser();
+		removeFromTeam();
+		deleteTeam();
+	}
+	
 	return {
-		createNewTeam: createNewTeam,
-		updateTeam: updateTeam,
-		findUser: findUser,
-		addUser: addUser,
-		removeFromTeam: removeFromTeam,
-		deleteTeam: deleteTeam
+		init: init
 	};
 })();
-
-$(document).ready(function() {
-	if (CONTROLLER_NAME === "index") {
-		IndexController.cancelButton();
-		IndexController.signUp();
-		IndexController.login();
-	} else if (CONTROLLER_NAME === "dashboard") {
-		DashboardController.updateProfile();
-		DashboardController.updatePassword();
-	} else if (CONTROLLER_NAME === "team") {
-		TeamController.createNewTeam();
-		TeamController.updateTeam();
-		TeamController.findUser();
-		TeamController.addUser();
-		TeamController.removeFromTeam();
-		TeamController.deleteTeam();
-	}
-});

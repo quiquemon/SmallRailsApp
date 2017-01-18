@@ -33,7 +33,7 @@ class TeamController < ApplicationController
 					else
 						render json: {
 							status: 1,
-							errors: team.errors
+							errors: team.errors.values.flatten
 						}
 					end
 				end
@@ -58,9 +58,7 @@ class TeamController < ApplicationController
 						if @team.user_team.count > @team.memberNumber
 							return render json: {
 								status: 1,
-								errors: {
-									memberNumber: ['Su equipo aún tiene integrantes. Por favor, elimine algunos miembros para poder reducir el tamaño del equipo.']
-								}
+								errors: ['Su equipo aún tiene integrantes. Por favor, elimine algunos miembros para poder reducir el tamaño del equipo.']
 							}
 						else
 							if @team.save
@@ -75,7 +73,7 @@ class TeamController < ApplicationController
 					
 					render json: {
 						status: 1,
-						errors: @team.errors
+						errors: @team.errors.values.flatten
 					}
 				end
 			end
@@ -124,9 +122,7 @@ class TeamController < ApplicationController
 					rescue ActiveRecord::RecordNotFound
 						render json: {
 							status: 1,
-							errors: {
-								user: ["El usuario con el ID #{params[:idUser]} no existe."]
-							}
+							errors: ["El usuario con el ID #{params[:idUser]} no existe."]
 						}
 					end
 				end
@@ -146,9 +142,7 @@ class TeamController < ApplicationController
 					if affected_rows == 0
 						render json: {
 							status: 1,
-							errors: {
-								user: ["El usuario con ID #{params[:idUser]} no se encuentra en este equipo."]
-							}
+							errors: ["El usuario con ID #{params[:idUser]} no se encuentra en este equipo."]
 						}
 					else
 						render json: {
@@ -186,9 +180,7 @@ private
 					format.json do
 						render json: {
 							status: 1,
-							errors: {
-								idTeam: ["No se encontró el equipo con el ID: #{params[:id]}. Por favor, pruebe a recargar la página."]
-							}
+							errors: ["No se encontró el equipo con el ID: #{params[:id]}. Por favor, pruebe a recargar la página."]
 						}
 					end
 				end
@@ -207,9 +199,7 @@ private
 					format.json do
 						render json: {
 							status: 1,
-							errors: {
-								idTeam: ['Usted no tiene los permisos para hacer cambios sobre este equipo.']
-							}
+							errors: ['Usted no tiene los permisos para hacer cambios sobre este equipo.']
 						}
 					end
 				end

@@ -25,4 +25,12 @@ $(document).ready(function() {
 		startDate: "1900-01-01",
 		endDate: new Date()
 	});
+	
+	if (CONTROLLER_NAME === "index") {
+		IndexController.init();
+	} else if (CONTROLLER_NAME === "dashboard") {
+		DashboardController.init();
+	} else if (CONTROLLER_NAME === "team") {
+		TeamController.init();
+	}
 });

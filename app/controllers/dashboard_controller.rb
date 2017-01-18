@@ -28,7 +28,7 @@ class DashboardController < ApplicationController
 				else
 					render json: {
 						status: 1,
-						errors: @user.errors
+						errors: @user.errors.values.flatten
 					}
 				end
 			end
@@ -41,7 +41,7 @@ class DashboardController < ApplicationController
 				if Password.new(@user.password) != params[:oldPassword]
 					render json: {
 						status: 1,
-						errors: { password: ['La contraseña actual es incorrecta.'] }
+						errors: ['La contraseña actual es incorrecta.']
 					}
 				else
 					@user.password = params[:newPassword]
@@ -55,7 +55,7 @@ class DashboardController < ApplicationController
 					else
 						render json: {
 							status: 2,
-							errors: @user.errors
+							errors: @user.errors.values.flatten
 						}
 					end
 				end
